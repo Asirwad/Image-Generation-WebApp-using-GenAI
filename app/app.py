@@ -62,6 +62,7 @@ elif selected_tab == 'image generation':
                   size='sm',
                   variant='outline',
                   color='gray')
+        steps = 10
         if st.toggle('Custom steps'):
             steps = st.number_input(label="Steps",
                                     label_visibility='collapsed',
