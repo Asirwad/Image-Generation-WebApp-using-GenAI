@@ -14,7 +14,7 @@ API_URL_V2 = "https://api-inference.huggingface.co/models/stabilityai/stable-dif
 @streamlit.cache_resource(show_spinner=False, experimental_allow_widgets=True)
 def generate_image_locally(prompt, steps=10):
     # Check if the model exists locally
-    model_path = "./Models/stable-diffusion-xl-base-1.0"
+    model_path = "../Models/stable-diffusion-xl-base-1.0"
     if os.path.exists(model_path):
         # Load the model
         print("Model found")

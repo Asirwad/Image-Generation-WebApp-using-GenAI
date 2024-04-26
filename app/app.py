@@ -4,7 +4,7 @@ import streamlit_antd_components as sac
 import streamlit as st
 from streamlit_lottie import st_lottie
 
-from generator import generate_image_locally, generate_image_cloud
+from core.generator import generate_image_locally, generate_image_cloud
 from utils.gpu_info_fetcher import get_gpu_info
 
 with st.sidebar:
@@ -71,7 +71,7 @@ elif selected_tab == 'image generation':
                                     max_value=30)
 
     # Create generate button
-    generate_button = st.button("Generate")
+    generate_button = st.button(":green[Generate]")
     if generate_button:
         # Generate image based on prompt
         if prompt:
