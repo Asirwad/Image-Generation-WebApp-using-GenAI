@@ -43,12 +43,12 @@ if selected_tab == 'Home':
     st.write("Welcome to our Steganography and Super Resolution project! This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
 elif selected_tab == 'image generation':
-    st.title("Image Generation using stable Diffusion")
+    st.title("Image Generation using stable Diffusion🪄")
 
     # Create text input for entering prompt
     prompt = st.text_input("Enter prompt:")
 
-    # selectbox for computing platform
+    # select-box for computing platform
     computing_choice = st.selectbox(
         'Which computing platform do you want to use?',
         ('Cloud', 'Local Machine'))
@@ -76,6 +76,11 @@ elif selected_tab == 'image generation':
     if generate_button:
         # Generate image based on prompt
         if prompt:
+            image_placeholder = st.empty()
+            with image_placeholder:
+                with open("assets/animation.json", 'r') as f:
+                    data = json.load(f)
+                loading_animation = st_lottie(data, width=300)
             with st.spinner('Generating..'):
                 if computing_choice == 'Local Machine':
                     generated_image = generate_image_locally(prompt=prompt, steps=steps)
@@ -83,16 +88,15 @@ elif selected_tab == 'image generation':
                     generated_image = generate_image_cloud(prompt=prompt)
 
             # Display generated image
-            st.image(generated_image, caption='Generated Image', use_column_width=True)
+            image_placeholder.empty()
+            st.image(generated_image, width=256)
         else:
             st.warning("Enter a prompt to generate", icon='⚠️')
 
     # Create download button
     if 'generated_image' in locals():
-        if st.button("Download"):
-            # Save the image
-            save_path = "generated_image.png"  # Default save path
-            generated_image.save(save_path)
-            st.success(f"Image saved to: {save_path}")
+        if st.download_button("Download", 'generated_image', file_name=f"{prompt}.png"):
+            st.success("Downloaded successfully!")
+
 
 
