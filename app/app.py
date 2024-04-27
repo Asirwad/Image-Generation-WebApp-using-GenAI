@@ -1,17 +1,24 @@
+import datetime
 import json
+import time
 
+from PIL import Image
 import streamlit_antd_components as sac
 import streamlit as st
 from streamlit_lottie import st_lottie
-
-from core.generator import generate_image_locally, generate_image_cloud
+import os
+import tempfile
+from core_func.text2image.generator import generate_image_locally, generate_image_cloud
+from core_func.upscale import upscale_image
 from utils.gpu_info_fetcher import get_gpu_info
+
 
 with st.sidebar:
     selected_tab = sac.menu([
         sac.MenuItem('Home', icon='house-fill'),
         sac.MenuItem('GenAI', icon='box-fill', children=[
             sac.MenuItem('image generation', icon='image'),
+            sac.MenuItem('super resolution', icon='feather')
         ]),
         sac.MenuItem('Security', icon='safe', children=[
             sac.MenuItem('encryption', icon='lock'),
@@ -98,5 +105,70 @@ elif selected_tab == 'image generation':
         if st.download_button("Download", 'generated_image', file_name=f"{prompt}.png"):
             st.success("Downloaded successfully!")
 
+elif selected_tab == 'super resolution':
+    st.title("Image super-resolution using :green[Enhanced Super-resolution GAN🪶]")
+
+    uploaded_file = st.file_uploader("Upload a low resolution Image", type=['jpg', 'png'])
+    if uploaded_file is not None:
+        sac.menu([sac.MenuItem(type='divider')])
+        low_res_image = Image.open(uploaded_file)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            low_res_image_placeholder = st.empty()
+        with col2:
+            high_res_image_placeholder = st.empty()
+        with col1:
+            with low_res_image_placeholder:
+                st.image(low_res_image, width=256, caption=f"Low resolution image\nSize: {uploaded_file.size/1024}kb")
+        with col2:
+            with high_res_image_placeholder:
+                with open("assets/AnimationForSuperRes.json", 'r') as f:
+                    data = json.load(f)
+                st_lottie(data, width=256)
+
+        if st.button("Upscale", type='primary'):
+            progress_placeholder = st.empty()
+            progress_placeholder = st.progress(0)
+            with col2:
+                with high_res_image_placeholder:
+                    with open("assets/AnimationProcessing.json", 'r') as f:
+                        data = json.load(f)
+                    st_lottie(data, width=256)
+            # Save the uploaded file temporarily
+            original_filename = uploaded_file.name
+            temp_folder = 'temps'
+            if not os.path.exists(temp_folder):
+                os.mkdir(temp_folder)
+            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            image_filepath = os.path.join(temp_folder, f"{timestamp}_{original_filename}")
+            image = Image.open(uploaded_file)
+            image.save(image_filepath)
+
+            with st.spinner("In progress.."):
+                for i in range(1, 25):
+                    progress_placeholder.progress(i*2)
+                    time.sleep(0.1)
+                high_res_image_filepath = upscale_image(image_filepath)
+                progress_placeholder.progress(100)
+
+            # Check if upscale_image returned a valid path
+            if high_res_image_filepath:
+                high_res_image = Image.open(high_res_image_filepath)
+                with col2:
+                    high_res_image_placeholder.empty()
+                    st.image(high_res_image, width=256, caption=f"high resolution image")
+                    progress_placeholder.empty()
+                # Optionally, delete the temporary file after successful processing
+                os.remove(image_filepath)
+                if st.download_button("Download", 'high_res_image', file_name=f"{uploaded_file.name}"):
+                    st.success("Downloaded successfully!")
+            else:
+                st.error("Upscaling failed. Please check the uploaded image.")
+
+    else:
+        st.info("Upload a low-resolution image to see the Super Resolution magic!")
+        sac.menu([sac.MenuItem(type='divider')])
+        st.write("The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
+        st.write("ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
 
 
