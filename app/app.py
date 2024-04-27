@@ -31,9 +31,10 @@ with st.sidebar:
 
         sac.MenuItem(type='divider'),
         sac.MenuItem('Connect', type='group', children=[
-            sac.MenuItem('github', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
+            sac.MenuItem('desktopApp repo', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
+            sac.MenuItem('webApp repo', icon='github', href='https://github.com/Asirwad/Image-Generation-WebApp-using-GenAI'),
         ]),
-    ], open_all=False, color='green', size='lg', variant='light')
+    ], open_all=False, color='green', size='md', variant='light')
 
 if selected_tab == 'Home':
     header_col1, logo_col = st.columns([3, 1])
@@ -47,7 +48,7 @@ if selected_tab == 'Home':
     with illustration_col:
         with open("assets/animation2.json", 'r') as f:
             data = json.load(f)
-        st_lottie(data, width=220)
+        st_lottie(data, width=235)
     with desc_col:
         st.write("This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
@@ -68,7 +69,7 @@ elif selected_tab == 'image generation':
                   description=get_gpu_info(),
                   banner=False,
                   icon=True,
-                  closable=True,
+                  closable=False,
                   size='sm',
                   variant='outline',
                   color='gray')
@@ -236,6 +237,7 @@ elif selected_tab == 'encryption':
             image_placeholder.empty()
             st.success("Encryption successful")
             os.remove(image_filepath)
+            image = None
             with open(enc_filepath, 'rb') as f:
                 if st.download_button("Download", f, file_name=uploaded_file.name + '.enc'):
                     st.success("Downloaded!")
