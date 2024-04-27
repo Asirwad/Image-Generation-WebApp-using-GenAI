@@ -31,7 +31,7 @@ with st.sidebar:
 
         sac.MenuItem(type='divider'),
         sac.MenuItem('Connect', type='group', children=[
-            sac.MenuItem('github', icon='github', href='https://ant.design/components/menu#menu'),
+            sac.MenuItem('github', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
             sac.MenuItem('linkedin', icon='linkedin', href='https://icons.getbootstrap.com/'),
         ]),
     ], open_all=False, color='green', size='lg', variant='light')
