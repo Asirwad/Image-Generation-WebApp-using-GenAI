@@ -8,7 +8,7 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 import os
 from core_func.text2image.generator import generate_image_locally, generate_image_cloud
-from core_func import aes
+from core_func import aes, blowfish
 from core_func.upscale import upscale_image
 from utils.gpu_info_fetcher import get_gpu_info
 
@@ -216,7 +216,17 @@ elif selected_tab == 'encryption':
                         progress_placeholder.progress(100)
                         progress_placeholder.empty()
                     elif selected_algorithm == 'Blowfish':
-                        pass
+                        with image_placeholder:
+                            with open("assets/AnimationProcessing.json", 'r') as f:
+                                data = json.load(f)
+                            st_lottie(data, width=256)
+                        progress_placeholder = st.progress(0)
+                        for i in range(1, 50):
+                            progress_placeholder.progress(i * 2)
+                            time.sleep(0.1)
+                        enc_filepath = blowfish.encrypt(image_filepath, key=enc_key)
+                        progress_placeholder.progress(100)
+                        progress_placeholder.empty()
                     else:
                         st.warning("Select an algorithm to continue")
                 else:
