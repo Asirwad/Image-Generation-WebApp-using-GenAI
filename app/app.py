@@ -108,7 +108,7 @@ elif selected_tab == 'image generation':
 
 elif selected_tab == 'super resolution':
     st.title("Image super-resolution using :green[Enhanced Super-resolution GAN🪶]")
-
+    sac.menu([sac.MenuItem(type='divider')])
     uploaded_file = st.file_uploader("Upload a low resolution Image", type=['jpg', 'png'])
     if uploaded_file is not None:
         sac.menu([sac.MenuItem(type='divider')])
