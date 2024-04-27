@@ -35,18 +35,18 @@ with st.sidebar:
     ], open_all=False, color='green', size='lg', variant='light')
 
 if selected_tab == 'Home':
-    header_col1, header_col2 = st.columns([3, 1])
+    header_col1, logo_col = st.columns([3, 1])
     with header_col1:
         st.title(":green[InvisiCipher] : Deep Learning-Based image Steganography and more")
-    with header_col2:
-        st.image('assets/logo.png')
+    with logo_col:
+        st.image('assets/logo.png', use_column_width=True)
     sac.menu([sac.MenuItem(type='divider')])
 
-    illustration_col, desc_col = st.columns([2, 3])
+    illustration_col, desc_col = st.columns([1, 2])
     with illustration_col:
         with open("assets/animation2.json", 'r') as f:
             data = json.load(f)
-        st_lottie(data, width=280)
+        st_lottie(data, width=220)
     with desc_col:
         st.write("This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
@@ -108,7 +108,7 @@ elif selected_tab == 'image generation':
 
 elif selected_tab == 'super resolution':
     st.title("Image super-resolution using :green[Enhanced Super-resolution GAN🪶]")
-    sac.menu([sac.MenuItem(type='divider')])
+
     uploaded_file = st.file_uploader("Upload a low resolution Image", type=['jpg', 'png'])
     if uploaded_file is not None:
         sac.menu([sac.MenuItem(type='divider')])
@@ -172,8 +172,4 @@ elif selected_tab == 'super resolution':
         st.write("The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
         st.write("ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
 
-elif selected_tab == 'encryption':
-    st.title("Image Encryption using :green[AES] and :green[Blowfish] 🔐")
 
-elif selected_tab == 'decryption':
-    st.title("Image Decryption using :green[AES] and :green[Blowfish] 🔓")
