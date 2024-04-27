@@ -32,7 +32,6 @@ with st.sidebar:
         sac.MenuItem(type='divider'),
         sac.MenuItem('Connect', type='group', children=[
             sac.MenuItem('github', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
-            sac.MenuItem('linkedin', icon='linkedin', href='https://icons.getbootstrap.com/'),
         ]),
     ], open_all=False, color='green', size='lg', variant='light')
 
@@ -47,7 +46,11 @@ if selected_tab == 'Home':
         st_lottie(data, width=300)
     sac.menu([sac.MenuItem(type='divider')])
 
-    st.write("Welcome to our Steganography and Super Resolution project! This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
+    logo_col, desc_col = st.columns([1, 3])
+    with logo_col:
+        st.image('assets/logo.png', use_column_width=True)
+    with desc_col:
+        st.write("This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
 elif selected_tab == 'image generation':
     st.title("Image Generation using stable Diffusion🪄")
