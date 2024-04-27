@@ -8,6 +8,7 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 import os
 from core_func.text2image.generator import generate_image_locally, generate_image_cloud
+from core_func import aes
 from core_func.upscale import upscale_image
 from utils.gpu_info_fetcher import get_gpu_info
 
@@ -51,7 +52,8 @@ if selected_tab == 'Home':
         st.write("This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
 elif selected_tab == 'image generation':
-    st.title("Image Generation using stable Diffusion🪄")
+    st.title("Image Generation using :green[stable Diffusion]🪄")
+    sac.menu([sac.MenuItem(type='divider')])
 
     # Create text input for entering prompt
     prompt = st.text_input("Enter prompt:")
@@ -127,7 +129,7 @@ elif selected_tab == 'super resolution':
                     data = json.load(f)
                 st_lottie(data, width=256)
 
-        if st.button("Upscale", type='primary'):
+        if st.button("Upscale", type='primary', use_container_width=True):
             progress_placeholder = st.empty()
             progress_placeholder = st.progress(0)
             with col2:
@@ -171,5 +173,65 @@ elif selected_tab == 'super resolution':
         sac.menu([sac.MenuItem(type='divider')])
         st.write("The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
         st.write("ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
+
+elif selected_tab == 'encryption':
+    st.title("Image encryption using :green[AES] and :green[Blowfish]🔐")
+    sac.menu([sac.MenuItem(type='divider')])
+
+    selected_algorithm = st.selectbox("Select the encryption algorithm", options=(None, 'AES', 'Blowfish'))
+    enc_key = st.text_input(label="Enter the encryption key", placeholder="key here..", type="password", value='')
+    uploaded_file = st.file_uploader("Upload image to be encrypted", type=['jpg', 'png'])
+
+    image_placeholder = st.empty()
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        with image_placeholder:
+            st.image(image, caption="Image to be encrypted", width=256)
+
+        # Save the uploaded file temporarily
+        original_filename = uploaded_file.name
+        temp_folder = 'temps'
+        if not os.path.exists(temp_folder):
+            os.mkdir(temp_folder)
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        image_filepath = os.path.join(temp_folder, f"{timestamp}_{original_filename}")
+        image = Image.open(uploaded_file)
+        image.save(image_filepath)
+
+        enc_filepath = ""
+        if st.button("Encrypt", type='primary', use_container_width=True):
+            with st.spinner("Working on it..."):
+                progress_placeholder = st.empty()
+                if enc_key != '':
+                    if selected_algorithm == 'AES':
+                        with image_placeholder:
+                            with open("assets/AnimationProcessing.json", 'r') as f:
+                                data = json.load(f)
+                            st_lottie(data, width=256)
+                        progress_placeholder = st.progress(0)
+                        for i in range(1, 50):
+                            progress_placeholder.progress(i*2)
+                            time.sleep(0.1)
+                        enc_filepath = aes.encrypt(image_filepath, key=enc_key)
+                        progress_placeholder.progress(100)
+                        progress_placeholder.empty()
+                    elif selected_algorithm == 'Blowfish':
+                        pass
+                    else:
+                        st.warning("Select an algorithm to continue")
+                else:
+                    st.warning("Enter a valid key")
+
+        if enc_filepath != "":
+            image_placeholder.empty()
+            st.success("Encryption successful")
+            os.remove(image_filepath)
+            with open(enc_filepath, 'rb') as f:
+                if st.download_button("Download", f, file_name=uploaded_file.name + '.enc'):
+                    st.success("Downloaded!")
+            os.remove(enc_filepath)
+elif selected_tab == 'decryption':
+    st.title("Image decryption using :green[AES] and :green[Blowfish]🔓")
+    sac.menu([sac.MenuItem(type='divider')])
 
 
