@@ -1,0 +1,12 @@
+torch
+diffusers
+invisible_watermark
+transformers
+accelerate
+safetensors
+streamlit
+streamlit-lottie
+streamlit-antd-components
+Pillow
+
+
