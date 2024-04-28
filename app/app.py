@@ -46,7 +46,7 @@ if selected_tab == 'Home':
 
     illustration_col, desc_col = st.columns([1, 2])
     with illustration_col:
-        with open("assets/animation2.json", 'r') as f:
+        with open("assets/lottie/Animation2.json", 'r') as f:
             data = json.load(f)
         st_lottie(data, width=235)
     with desc_col:
@@ -89,7 +89,7 @@ elif selected_tab == 'image generation':
         if prompt:
             image_placeholder = st.empty()
             with image_placeholder:
-                with open("assets/animation.json", 'r') as f:
+                with open("assets/lottie/animation.json", 'r') as f:
                     data = json.load(f)
                 loading_animation = st_lottie(data, width=300)
             with st.spinner('Generating..'):
@@ -126,7 +126,7 @@ elif selected_tab == 'super resolution':
                 st.image(low_res_image, width=256, caption=f"Low resolution image\nSize: {uploaded_file.size/1024}kb")
         with col2:
             with high_res_image_placeholder:
-                with open("assets/AnimationForSuperRes.json", 'r') as f:
+                with open("assets/lottie/AnimationForSuperRes.json", 'r') as f:
                     data = json.load(f)
                 st_lottie(data, width=256)
 
@@ -135,7 +135,7 @@ elif selected_tab == 'super resolution':
             progress_placeholder = st.progress(0)
             with col2:
                 with high_res_image_placeholder:
-                    with open("assets/AnimationProcessing.json", 'r') as f:
+                    with open("assets/lottie/AnimationProcessing.json", 'r') as f:
                         data = json.load(f)
                     st_lottie(data, width=256)
             # Save the uploaded file temporarily
@@ -206,7 +206,7 @@ elif selected_tab == 'encryption':
                 if enc_key != '':
                     if selected_algorithm == 'AES':
                         with image_placeholder:
-                            with open("assets/AnimationProcessing.json", 'r') as f:
+                            with open("assets/lottie/AnimationProcessing.json", 'r') as f:
                                 data = json.load(f)
                             st_lottie(data, width=256)
                         progress_placeholder = st.progress(0)
@@ -218,7 +218,7 @@ elif selected_tab == 'encryption':
                         progress_placeholder.empty()
                     elif selected_algorithm == 'Blowfish':
                         with image_placeholder:
-                            with open("assets/AnimationProcessing.json", 'r') as f:
+                            with open("assets/lottie/AnimationProcessing.json", 'r') as f:
                                 data = json.load(f)
                             st_lottie(data, width=256)
                         progress_placeholder = st.progress(0)
