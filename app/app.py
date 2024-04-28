@@ -14,6 +14,9 @@ from utils.gpu_info_fetcher import get_gpu_info
 
 
 with st.sidebar:
+    logo_and_name_placeholder = st.empty()
+    with logo_and_name_placeholder:
+        st.image("assets/lottie/InvisiCipherLogoAndName.gif", clamp=True)
     selected_tab = sac.menu([
         sac.MenuItem('Home', icon='house-fill'),
         sac.MenuItem('GenAI', icon='box-fill', children=[
@@ -83,7 +86,7 @@ elif selected_tab == 'image generation':
                                     max_value=30)
 
     # Create generate button
-    generate_button = st.button(":green[Generate]")
+    generate_button = st.button("Generate", use_container_width=True, type='primary')
     if generate_button:
         # Generate image based on prompt
         if prompt:
