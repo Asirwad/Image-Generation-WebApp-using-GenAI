@@ -12,11 +12,14 @@ from core_func import aes, blowfish
 from core_func.upscale import upscale_image
 from utils.gpu_info_fetcher import get_gpu_info
 
+st.set_page_config(page_title="Invisicipher",
+                   page_icon="assets/icon.ico",
+                   )
 
 with st.sidebar:
     logo_and_name_placeholder = st.empty()
     with logo_and_name_placeholder:
-        st.image("assets/lottie/InvisiCipherLogoAndName.gif", clamp=True)
+        st.image("assets/InvisiCipherLogoAndName.gif", clamp=True)
     selected_tab = sac.menu([
         sac.MenuItem('Home', icon='house-fill'),
         sac.MenuItem('GenAI', icon='box-fill', children=[
