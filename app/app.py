@@ -1,4 +1,5 @@
 import datetime
+import io
 import json
 import time
 
@@ -62,10 +63,8 @@ elif selected_tab == 'image generation':
     st.title("Image Generation using :green[stable Diffusion]🪄")
     sac.menu([sac.MenuItem(type='divider')])
 
-    # Create text input for entering prompt
-    prompt = st.text_input("Enter prompt:")
+    prompt = st.text_input("Enter a prompt", placeholder="eg: A field of pumpkins ready for harvest")
 
-    # select-box for computing platform
     computing_choice = st.selectbox(
         'Which computing platform do you want to use?',
         ('Cloud', 'Local Machine'))
@@ -78,7 +77,7 @@ elif selected_tab == 'image generation':
                   closable=False,
                   size='sm',
                   variant='outline',
-                  color='gray')
+                  color='green')
         steps = 10
         if st.toggle('Custom steps'):
             steps = st.number_input(label="Steps",
@@ -107,13 +106,17 @@ elif selected_tab == 'image generation':
             # Display generated image
             image_placeholder.empty()
             st.image(generated_image, width=256)
+
+            # Create download button
+            print(type(generated_image))
+            if 'generated_image' in locals():
+                buffer = io.BytesIO()
+                generated_image.save(buffer, format="JPEG")
+                image_bytes = buffer.getvalue()
+                if st.download_button("Download", image_bytes, file_name=f"{prompt.replace(' ', '_')}.jpg"):
+                    st.success("Downloaded successfully!")
         else:
             st.warning("Enter a prompt to generate", icon='⚠️')
-
-    # Create download button
-    if 'generated_image' in locals():
-        if st.download_button("Download", 'generated_image', file_name=f"{prompt}.png"):
-            st.success("Downloaded successfully!")
 
 elif selected_tab == 'super resolution':
     st.title("Image super-resolution using :green[Enhanced Super-resolution GAN🪶]")
@@ -251,5 +254,13 @@ elif selected_tab == 'encryption':
 elif selected_tab == 'decryption':
     st.title("Image decryption using :green[AES] and :green[Blowfish]🔓")
     sac.menu([sac.MenuItem(type='divider')])
+
+    selected_algorithm = st.selectbox("Select the decryption  algorithm", options=[None, 'AES', 'Blowfish'])
+    dec_key = st.text_input(label="Enter the decryption key", placeholder="key here..", type="password", value='')
+    uploaded_file = st.file_uploader("Upload image to be encrypted", type=['enc'])
+
+    image_placeholder = st.empty()
+    if uploaded_file is not None:
+        pass
 
 
