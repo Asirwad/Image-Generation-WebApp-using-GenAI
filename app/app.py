@@ -173,7 +173,10 @@ elif selected_tab == 'super resolution':
                     progress_placeholder.empty()
                 # Optionally, delete the temporary file after successful processing
                 os.remove(image_filepath)
-                if st.download_button("Download", 'high_res_image', file_name=f"{uploaded_file.name}"):
+                buffer = io.BytesIO()
+                high_res_image.save(buffer, "PNG")
+                high_res_image_bytes = buffer.getvalue()
+                if st.download_button("Download", high_res_image_bytes, file_name=f"{uploaded_file.name}"):
                     st.success("Downloaded successfully!")
             else:
                 st.error("Upscaling failed. Please check the uploaded image.")
