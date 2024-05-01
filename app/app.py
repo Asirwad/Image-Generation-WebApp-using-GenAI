@@ -39,7 +39,8 @@ with st.sidebar:
         sac.MenuItem(type='divider'),
         sac.MenuItem('Connect', type='group', children=[
             sac.MenuItem('desktopApp repo', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
-            sac.MenuItem('webApp repo', icon='github', href='https://github.com/Asirwad/Image-Generation-WebApp-using-GenAI'),
+            sac.MenuItem('webApp repo', icon='github',
+                         href='https://github.com/Asirwad/Image-Generation-WebApp-using-GenAI'),
         ]),
     ], open_all=False, color='green', size='md', variant='light')
 
@@ -57,7 +58,8 @@ if selected_tab == 'Home':
             data = json.load(f)
         st_lottie(data, width=235)
     with desc_col:
-        st.write("This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
+        st.write(
+            "This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
 elif selected_tab == 'image generation':
     st.title("Image Generation using :green[stable Diffusion]🪄")
@@ -107,8 +109,6 @@ elif selected_tab == 'image generation':
             image_placeholder.empty()
             st.image(generated_image, width=256)
 
-            # Create download button
-            print(type(generated_image))
             if 'generated_image' in locals():
                 buffer = io.BytesIO()
                 generated_image.save(buffer, format="JPEG")
@@ -132,7 +132,7 @@ elif selected_tab == 'super resolution':
             high_res_image_placeholder = st.empty()
         with col1:
             with low_res_image_placeholder:
-                st.image(low_res_image, width=256, caption=f"Low resolution image\nSize: {uploaded_file.size/1024}kb")
+                st.image(low_res_image, width=256, caption=f"Low resolution image\nSize: {uploaded_file.size / 1024}kb")
         with col2:
             with high_res_image_placeholder:
                 with open("assets/lottie/AnimationForSuperRes.json", 'r') as f:
@@ -159,7 +159,7 @@ elif selected_tab == 'super resolution':
 
             with st.spinner("In progress.."):
                 for i in range(1, 25):
-                    progress_placeholder.progress(i*2)
+                    progress_placeholder.progress(i * 2)
                     time.sleep(0.1)
                 high_res_image_filepath = upscale_image(image_filepath)
                 progress_placeholder.progress(100)
@@ -184,8 +184,10 @@ elif selected_tab == 'super resolution':
     else:
         st.info("Upload a low-resolution image to see the Super Resolution magic!")
         sac.menu([sac.MenuItem(type='divider')])
-        st.write("The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
-        st.write("ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
+        st.write(
+            "The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
+        st.write(
+            "ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
 
 elif selected_tab == 'encryption':
     st.title("Image encryption using :green[AES] and :green[Blowfish]🔐")
@@ -223,7 +225,7 @@ elif selected_tab == 'encryption':
                             st_lottie(data, width=256)
                         progress_placeholder = st.progress(0)
                         for i in range(1, 50):
-                            progress_placeholder.progress(i*2)
+                            progress_placeholder.progress(i * 2)
                             time.sleep(0.1)
                         enc_filepath = aes.encrypt(image_filepath, key=enc_key)
                         progress_placeholder.progress(100)
@@ -263,7 +265,47 @@ elif selected_tab == 'decryption':
     uploaded_file = st.file_uploader("Upload image to be encrypted", type=['enc'])
 
     image_placeholder = st.empty()
-    if uploaded_file is not None:
-        pass
-
-
+    button_placeholder = st.empty()
+    with button_placeholder:
+        if st.button("Decrypt", use_container_width=True, type='primary'):
+            if selected_algorithm is None or dec_key == '' or uploaded_file is None:
+                st.warning("All fields are required", icon='ℹ️')
+            else:
+                # Save the uploaded file temporarily
+                original_filename = uploaded_file.name
+                temp_folder = 'temps'
+                if not os.path.exists(temp_folder):
+                    os.mkdir(temp_folder)
+                timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                enc_file_filepath = os.path.join(temp_folder, f"{timestamp}_{original_filename}")
+                buffer = uploaded_file.getvalue()
+                with open(enc_file_filepath, 'wb') as f:
+                    f.write(buffer)
+                button_placeholder.empty()
+                with image_placeholder:
+                    with open("assets/lottie/AnimationProcessing.json", 'r') as f:
+                        data = json.load(f)
+                    st_lottie(data, width=256)
+                progress_placeholder = st.progress(0)
+                for i in range(1, 50):
+                    progress_placeholder.progress(i * 2)
+                    time.sleep(0.1)
+                image_placeholder.empty()
+                progress_placeholder.empty()
+                result, decrypted_image_filepath = aes.decrypt(enc_file_filepath, dec_key) if selected_algorithm == 'AES' else blowfish.decrypt(enc_file_filepath, dec_key)
+                if result == -1:
+                    st.error('Wrong key or algorithm', icon='❌')
+                else:
+                    with image_placeholder:
+                        st.image(decrypted_image_filepath)
+                    button_placeholder.empty()
+                    dec_image = Image.open(decrypted_image_filepath)
+                    buffer = io.BytesIO()
+                    dec_image.save(buffer, "PNG")
+                    dec_image_bytes = buffer.getvalue()
+                    with button_placeholder:
+                        st.download_button('Download',
+                                           type='primary',
+                                           use_container_width=True,
+                                           file_name=original_filename + '.png',
+                                           data=dec_image_bytes)

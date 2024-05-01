@@ -60,7 +60,7 @@ def decrypt(encrypted_image_path, key):
             f.write(decrypted_image_data)
 
     except ValueError:
-        print("Wrong Key ):")
+        print("Wrong Key")
         return -1, None
     return 0, filename
 
