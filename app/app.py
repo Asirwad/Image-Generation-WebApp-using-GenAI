@@ -11,6 +11,7 @@ import os
 from core_func.text2image.generator import generate_image_locally, generate_image_cloud
 from core_func import aes, blowfish
 from core_func.upscale import upscale_image
+from core_func import stego_cnn
 from utils.gpu_info_fetcher import get_gpu_info
 
 st.set_page_config(page_title="Invisicipher",
@@ -309,3 +310,97 @@ elif selected_tab == 'decryption':
                                            use_container_width=True,
                                            file_name=original_filename + '.png',
                                            data=dec_image_bytes)
+
+elif selected_tab == 'image hide':
+    st.title("Image steganography hide using :green[STEGO CNN]🔍")
+    sac.menu([sac.MenuItem(type='divider')])
+
+    cover_fileupload_col, secret_fileupload_col = st.columns([2, 2])
+    with cover_fileupload_col:
+        uploaded_cover_file = st.file_uploader("Upload cover image", type=['png'])
+    with secret_fileupload_col:
+        uploaded_secret_file = st.file_uploader("Upload secret image", type=['png'])
+
+    cover_col, secret_col, steg_col = st.columns([1, 1, 1])
+    with cover_col:
+        cover_placeholder = st.empty()
+    with secret_col:
+        secret_placeholder = st.empty()
+    with steg_col:
+        steg_placeholder = st.empty()
+    with cover_col:
+        with cover_placeholder:
+            with open("assets/lottie/AnimationForStegoImageUpload.json", 'r') as f:
+                st_lottie(json.load(f), width=256)
+    with secret_col:
+        with secret_placeholder:
+            with open("assets/lottie/AnimationForStegoImageUpload.json", 'r') as f:
+                st_lottie(json.load(f), width=256)
+    with steg_col:
+        with steg_placeholder:
+            with open("assets/lottie/AnimationForStegnoHideProcessing.json", 'r') as f:
+                st_lottie(json.load(f), width=256)
+
+    if uploaded_cover_file is not None:
+        with cover_placeholder:
+            with cover_col:
+                cover_placeholder.empty()
+                st.image(Image.open(uploaded_cover_file), caption="Cover image")
+
+    if uploaded_secret_file is not None:
+        with secret_placeholder:
+            with secret_col:
+                secret_placeholder.empty()
+                st.image(Image.open(uploaded_secret_file), caption='Secret image')
+
+    sac.alert(label='GPU Info',
+              description=get_gpu_info(),
+              banner=False,
+              icon=True,
+              closable=False,
+              size='xs',
+              variant='outline',
+              color='green',
+              radius='lg')
+    button_placeholder = st.empty()
+    with button_placeholder:
+        hide_button = st.button("Hide image", type='primary', use_container_width=True)
+    if hide_button:
+        if uploaded_secret_file is not None and uploaded_cover_file is not None:
+            # TODO: solve the animation and steg image stacking issue
+            # with steg_placeholder:
+            #   with steg_col:
+            #       steg_placeholder.empty()
+            #       with open("assets/lottie/AnimationProcessing.json", 'r') as f:
+            #           st_lottie(json.load(f), width=256)
+            progress_placeholder = st.empty()
+            progress_placeholder = st.progress(0)
+            with st.spinner("Working on it.."):
+                for i in range(1, 24):
+                    progress_placeholder.progress(i * 2)
+                    time.sleep(0.1)
+                cover_image = Image.open(uploaded_cover_file).convert('RGB')
+                secret_image = Image.open(uploaded_secret_file).convert('RGB')
+                steg_image = stego_cnn.hide_image(cover_image, secret_image)
+                steg_image = Image.fromarray(steg_image)
+                print(type(steg_image))
+                for i in range(25, 50):
+                    progress_placeholder.progress(i * 2)
+                    time.sleep(0.1)
+            progress_placeholder.progress(100)
+            progress_placeholder.empty()
+            button_placeholder.empty()
+            steg_placeholder.empty()
+            steg_placeholder.image(steg_image, caption='steg image')
+
+            buffer = io.BytesIO()
+            steg_image.save(buffer, "PNG")
+            steg_image_bytes = buffer.getvalue()
+            with button_placeholder:
+                if st.download_button(label='Download', data=steg_image_bytes, file_name='steg_image.png', type='primary', use_container_width=True):
+                    st.info("Downloaded successfully!")
+
+        else:
+            st.warning("All fields are required", icon='⚠️')
+
+
