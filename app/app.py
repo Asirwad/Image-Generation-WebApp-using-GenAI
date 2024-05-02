@@ -28,13 +28,13 @@ with st.sidebar:
             sac.MenuItem('image generation', icon='image'),
             sac.MenuItem('super resolution', icon='feather')
         ]),
-        sac.MenuItem('Security', icon='safe', children=[
-            sac.MenuItem('encryption', icon='lock'),
-            sac.MenuItem('decryption', icon='unlock')
-        ]),
         sac.MenuItem('Steganography', icon='search', children=[
             sac.MenuItem('image hide', icon='stickies-fill'),
             sac.MenuItem('image reveal', icon='textarea-resize')
+        ]),
+        sac.MenuItem('Security', icon='safe', children=[
+            sac.MenuItem('encryption', icon='lock'),
+            sac.MenuItem('decryption', icon='unlock')
         ]),
 
         sac.MenuItem(type='divider'),
