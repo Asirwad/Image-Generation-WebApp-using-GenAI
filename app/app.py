@@ -403,4 +403,72 @@ elif selected_tab == 'image hide':
         else:
             st.warning("All fields are required", icon='⚠️')
 
+elif selected_tab == 'image reveal':
+    st.title("Image steganography reveal using :green[STEGO CNN]🔍")
+    sac.menu([sac.MenuItem(type='divider')])
 
+    sac.alert(label='GPU Info',
+              description=get_gpu_info(),
+              banner=False,
+              icon=True,
+              closable=False,
+              size='xs',
+              variant='outline',
+              color='green',
+              radius='lg')
+
+    uploaded_steg_image = st.file_uploader(label='upload the steg image', type=['png'])
+
+    steg_col, secret_col = st.columns([1.5, 1])
+    with steg_col:
+        steg_placeholder = st.empty()
+    with secret_col:
+        secret_placeholder = st.empty()
+    with steg_col:
+        with steg_placeholder:
+            with open("assets/lottie/AnimationForStegoImageUpload.json", 'r') as f:
+                st_lottie(json.load(f), width=256)
+    with secret_col:
+        with secret_placeholder:
+            with open("assets/lottie/AnimationForStegoImageUpload.json", 'r') as f:
+                st_lottie(json.load(f), width=256)
+
+    button_placeholder = st.empty()
+    with button_placeholder:
+        reveal_button = st.button("Reveal image", type='primary', use_container_width=True)
+    if uploaded_steg_image is not None:
+        with steg_placeholder:
+            with steg_col:
+                steg_placeholder.empty()
+                st.image(Image.open(uploaded_steg_image), caption='Steg image')
+        if reveal_button:
+            if uploaded_steg_image is not None:
+                with secret_placeholder:
+                    with open("assets/lottie/AnimationProcessing.json", 'r') as f:
+                        st_lottie(json.load(f), width=256)
+                progress_placeholder = st.empty()
+                progress_placeholder = st.progress(0)
+                with st.spinner('Working on it..'):
+                    steg_image = Image.open(uploaded_steg_image).convert('RGB')
+                    secret_image = stego_cnn.reveal_image(steg_image)
+                    secret_image = Image.fromarray(secret_image)
+                    for i in range(1, 40):
+                        progress_placeholder.progress(i*2)
+                        time.sleep(0.1)
+                    progress_placeholder.progress(100)
+                    progress_placeholder.empty()
+                    secret_placeholder.empty()
+                    secret_placeholder.image(secret_image, caption='Revealed secret image')
+                    button_placeholder.empty()
+                with button_placeholder:
+                    buffer = io.BytesIO()
+                    secret_image.save(buffer, "PNG")
+                    secret_image_bytes = buffer.getvalue()
+                    with button_placeholder:
+                        if st.download_button(label='Download', data=secret_image_bytes, file_name='revealed_secret_image.png',
+                                              type='primary', use_container_width=True):
+                            st.info("Downloaded successfully!")
+
+    else:
+        if reveal_button:
+            st.warning("All fields are required", icon='⚠️')

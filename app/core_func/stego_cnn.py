@@ -45,10 +45,8 @@ def hide_image(cover_image_in, secret_image_in):
     return steg_image_out
 
 
-def reveal_image(stego_image_filepath):
+def reveal_image(stego_image):
     model = load_model("C:/Users/asirw/PycharmProjects/InvisiCipher/app/models/DEEP_STEGO/models/reveal.h5", compile=False)
-
-    stego_image = Image.open(stego_image_filepath).convert('RGB')
 
     # Resize the image to 224px*224px
     if stego_image.size != (224, 224):
@@ -63,9 +61,6 @@ def reveal_image(stego_image_filepath):
     secret_image_out = np.squeeze(secret_image_out) * 255.0
     secret_image_out = np.uint8(secret_image_out)
 
-    imageio.imsave("C:/Users/asirw/PycharmProjects/InvisiCipher/app/secret_out.png", secret_image_out)
-    print("Saved revealed image to secret_out.png")
-
-    return
+    return secret_image_out
 
 
