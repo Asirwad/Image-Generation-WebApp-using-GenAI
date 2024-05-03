@@ -7,8 +7,10 @@
 </p>
 
 <p align="center">
-  <strong>Hide secrets, enhance images!</strong>
+  <strong>Enhance your images while keeping your secrets safe!!</strong>
 </p>
+
+ - Check out the InvisiCipher Desktop app [↗️](https://github.com/Asirwad/InvisiCipher)
 
 ## Overview
 
@@ -18,7 +20,7 @@ Welcome to our Steganography and Super Resolution project! This project combines
 
 ✨ **Interactive Hiding**: Utilize our intuitive hide network powered by CNNs to embed secret images within cover images effortlessly.
 
-🔒 **Secure Encryption**: Choose from multiple chaos encryption algorithms such as AES, Blowfish to encrypt your steg image and protect your secrets.
+🔒 **Secure Encryption**: Choose from multiple chaos encryption algorithms such as AES, and Blowfish to encrypt your steg image and protect your secrets.
 
 🌟 **Enhanced Super Resolution**: Witness the magic of our ESRGAN model as it enhances the resolution and quality of the hidden image, revealing every detail.
 
