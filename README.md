@@ -1,5 +1,5 @@
 <h1 align="center">
-  InvisiCipher : Deep Learning-Based image Steganography and more
+  InvisiCipher : Deep Learning-Based image Steganography and more(Web App)
 </h1>
 
 <p align="center">
