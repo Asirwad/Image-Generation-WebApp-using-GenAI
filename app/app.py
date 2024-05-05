@@ -55,7 +55,7 @@ if selected_tab == 'Home':
 
     illustration_col, desc_col = st.columns([1, 2])
     with illustration_col:
-        with open("assets/lottie/Animation2.json", 'r') as f:
+        with open("assets/lottie/Animation2Optimized.json", 'r') as f:
             data = json.load(f)
         st_lottie(data, width=235)
     with desc_col:
