@@ -8,7 +8,7 @@ import streamlit_antd_components as sac
 import streamlit as st
 from streamlit_lottie import st_lottie
 import os
-from core_func.text2image.generator import generate_image_locally, generate_image_cloud
+from core_func.generator import generate_image_locally, generate_image_cloud
 from core_func import aes, blowfish
 from core_func.upscale import upscale_image
 from core_func import stego_cnn
@@ -26,7 +26,7 @@ with st.sidebar:
         sac.MenuItem('Home', icon='house-fill'),
         sac.MenuItem('GenAI', icon='box-fill', children=[
             sac.MenuItem('image generation', icon='image'),
-            sac.MenuItem('super resolution', icon='feather')
+            sac.MenuItem('super resolution', icon='feather'),
         ]),
         sac.MenuItem('Steganography', icon='search', children=[
             sac.MenuItem('image hide', icon='stickies-fill'),
@@ -34,15 +34,14 @@ with st.sidebar:
         ]),
         sac.MenuItem('Security', icon='safe', children=[
             sac.MenuItem('encryption', icon='lock'),
-            sac.MenuItem('decryption', icon='unlock')
+            sac.MenuItem('decryption', icon='unlock'),
         ]),
-
         sac.MenuItem(type='divider'),
         sac.MenuItem('Connect', type='group', children=[
             sac.MenuItem('desktopApp repo', icon='github', href='https://github.com/Asirwad/InvisiCipher'),
             sac.MenuItem('webApp repo', icon='github',
                          href='https://github.com/Asirwad/Image-Generation-WebApp-using-GenAI'),
-        ]),
+        ])
     ], open_all=False, color='green', size='md', variant='light')
 
 if selected_tab == 'Home':
@@ -63,7 +62,7 @@ if selected_tab == 'Home':
             "This project combines the power of steganography techniques and super-resolution using deep learning models. Our goal is to hide a secret image within a cover image using advanced convolutional neural networks (CNNs) and then enhance the quality of the hidden image using an Enhanced Super Resolution Generative Adversarial Network (ESRGAN). We also provide an option to encrypt the steg image using various chaos encryption algorithms for added security. Also adding GenAI features like text to image generation.")
 
 elif selected_tab == 'image generation':
-    st.title("Image Generation using :green[stable Diffusion]🪄")
+    st.title("Image Generation using :green[GenAI]🪄")
     sac.menu([sac.MenuItem(type='divider')])
 
     prompt = st.text_input("Enter a prompt", placeholder="eg: A field of pumpkins ready for harvest")
@@ -189,6 +188,7 @@ elif selected_tab == 'super resolution':
             "The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work that is capable of generating realistic textures during single image super-resolution")
         st.write(
             "ESRGAN achieves consistently better visual quality with more realistic and natural textures than SRGAN")
+
 
 elif selected_tab == 'encryption':
     st.title("Image encryption using :green[AES] and :green[Blowfish]🔐")
@@ -468,7 +468,15 @@ elif selected_tab == 'image reveal':
                         if st.download_button(label='Download', data=secret_image_bytes, file_name='revealed_secret_image.png',
                                               type='primary', use_container_width=True):
                             st.info("Downloaded successfully!")
-
     else:
         if reveal_button:
             st.warning("All fields are required", icon='⚠️')
+
+
+
+
+
+
+
+
+
